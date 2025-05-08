@@ -9,7 +9,7 @@ let matches = books
  * @returns {HTMLElement} - A button element representing the book. 
  */
 
-function createPreviewElement({ author, id, image, title }) {
+function bookPreviewElement({ author, id, image, title }) {
     const element = document.createElement('button')
     element.classList = 'preview'
     element.setAttribute('data-preview', id)
@@ -54,11 +54,20 @@ for (const { author, id, image, title } of matches.slice(0, BOOKS_PER_PAGE)) {
 
 /**
  * Render the book list by appending book preview elements to the list.
- * @param {Array} books - An array of book objects.
+ * @param {Array} booksToRender - An array of book objects.
  * @param {HTMLElement} container - The container element to append the book previews to.
  */
 
-function renderBooks() {}
+function renderBooks(booksToRender, container) {
+    const starting = document.createDocumentFragment()
+
+    for (const book of booksToRender) {
+        const element = bookPreviewElement(book)
+        starting.appendChild(element)
+    }
+
+    container.appendChild(starting)
+}
 
 /*
 document.querySelector('[data-list-items]').appendChild(starting)
