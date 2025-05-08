@@ -3,6 +3,32 @@ import { books, authors, genres, BOOKS_PER_PAGE } from './data.js'
 let page = 1;
 let matches = books
 
+/**
+ * Create a data preview button element with book titles, images and authors.
+ * @param {Object} book - A book object with author, id, image, and title.
+ * @returns {HTMLElement} - A button element representing the book. 
+ */
+
+function createPreviewElement({ author, id, image, title }) {
+    const element = document.createElement('button')
+    element.classList = 'preview'
+    element.setAttribute('data-preview', id)
+
+    element.innerHTML = `
+        <img
+            class="preview__image"
+            src="${image}"
+        />
+        
+        <div class="preview__info">
+            <h3 class="preview__title">${title}</h3>
+            <div class="preview__author">${authors[author]}</div>
+        </div>
+    `
+
+    return element
+}
+ /*
 const starting = document.createDocumentFragment()
 
 for (const { author, id, image, title } of matches.slice(0, BOOKS_PER_PAGE)) {
@@ -24,7 +50,17 @@ for (const { author, id, image, title } of matches.slice(0, BOOKS_PER_PAGE)) {
 
     starting.appendChild(element)
 }
+*/
 
+/**
+ * Render the book list by appending book preview elements to the list.
+ * @param {Array} books - An array of book objects.
+ * @param {HTMLElement} container - The container element to append the book previews to.
+ */
+
+function renderBooks() {}
+
+/*
 document.querySelector('[data-list-items]').appendChild(starting)
 
 const genreHtml = document.createDocumentFragment()
@@ -39,6 +75,7 @@ for (const [id, name] of Object.entries(genres)) {
     element.innerText = name
     genreHtml.appendChild(element)
 }
+*/
 
 document.querySelector('[data-search-genres]').appendChild(genreHtml)
 
