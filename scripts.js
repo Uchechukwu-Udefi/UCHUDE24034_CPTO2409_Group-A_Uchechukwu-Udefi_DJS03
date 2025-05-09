@@ -69,6 +69,34 @@ function renderBooks(booksToRender, container) {
     container.appendChild(starting)
 }
 
+renderBooks(matches.slice(0, BOOKS_PER_PAGE), document.querySelector('[data-list-items]'));
+
+/**
+ * Populates a dropdown menu with options.
+ * @param {Object} options - Key-value pairs for the dropdown.
+ * @param {HTMLElement} container - The dropdown element.
+ * @param {string} defaultText - The default option text.
+ */
+function populateDropdown(options, container, defaultText) {
+    const fragment = document.createDocumentFragment();
+    const defaultOption = document.createElement('option');
+    defaultOption.value = 'any';
+    defaultOption.innerText = defaultText;
+    fragment.appendChild(defaultOption);
+
+    for (const [id, name] of Object.entries(options)) {
+        const option = document.createElement('option');
+        option.value = id;
+        option.innerText = name;
+        fragment.appendChild(option);
+    }
+
+    container.appendChild(fragment);
+}
+
+populateDropdown(genres, document.querySelector('[data-search-genres]'), 'All Genres');
+populateDropdown(authors, document.querySelector('[data-search-authors]'), 'All Authors');
+
 /*
 document.querySelector('[data-list-items]').appendChild(starting)
 
@@ -84,7 +112,6 @@ for (const [id, name] of Object.entries(genres)) {
     element.innerText = name
     genreHtml.appendChild(element)
 }
-*/
 
 document.querySelector('[data-search-genres]').appendChild(genreHtml)
 
@@ -102,6 +129,7 @@ for (const [id, name] of Object.entries(authors)) {
 }
 
 document.querySelector('[data-search-authors]').appendChild(authorsHtml)
+*/
 
 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
     document.querySelector('[data-settings-theme]').value = 'night'
