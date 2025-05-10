@@ -28,29 +28,7 @@ function bookPreviewElement({ author, id, image, title }) {
 
     return element
 }
- /*
-const starting = document.createDocumentFragment()
 
-for (const { author, id, image, title } of matches.slice(0, BOOKS_PER_PAGE)) {
-    const element = document.createElement('button')
-    element.classList = 'preview'
-    element.setAttribute('data-preview', id)
-
-    element.innerHTML = `
-        <img
-            class="preview__image"
-            src="${image}"
-        />
-        
-        <div class="preview__info">
-            <h3 class="preview__title">${title}</h3>
-            <div class="preview__author">${authors[author]}</div>
-        </div>
-    `
-
-    starting.appendChild(element)
-}
-*/
 
 /**
  * Render the book list by appending book preview elements to the list.
@@ -97,39 +75,6 @@ function populateDropdown(options, container, defaultText) {
 populateDropdown(genres, document.querySelector('[data-search-genres]'), 'All Genres');
 populateDropdown(authors, document.querySelector('[data-search-authors]'), 'All Authors');
 
-/*
-document.querySelector('[data-list-items]').appendChild(starting)
-
-const genreHtml = document.createDocumentFragment()
-const firstGenreElement = document.createElement('option')
-firstGenreElement.value = 'any'
-firstGenreElement.innerText = 'All Genres'
-genreHtml.appendChild(firstGenreElement)
-
-for (const [id, name] of Object.entries(genres)) {
-    const element = document.createElement('option')
-    element.value = id
-    element.innerText = name
-    genreHtml.appendChild(element)
-}
-
-document.querySelector('[data-search-genres]').appendChild(genreHtml)
-
-const authorsHtml = document.createDocumentFragment()
-const firstAuthorElement = document.createElement('option')
-firstAuthorElement.value = 'any'
-firstAuthorElement.innerText = 'All Authors'
-authorsHtml.appendChild(firstAuthorElement)
-
-for (const [id, name] of Object.entries(authors)) {
-    const element = document.createElement('option')
-    element.value = id
-    element.innerText = name
-    authorsHtml.appendChild(element)
-}
-
-document.querySelector('[data-search-authors]').appendChild(authorsHtml)
-*/
 
 /**
  * Sets the theme based on the user's preference or settings.
@@ -149,18 +94,6 @@ function setTheme(theme) {
 
 const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 setTheme(prefersDark ? 'night' : 'day');
-
-/*
-if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.querySelector('[data-settings-theme]').value = 'night'
-    document.documentElement.style.setProperty('--color-dark', '255, 255, 255');
-    document.documentElement.style.setProperty('--color-light', '10, 10, 20');
-} else {
-    document.querySelector('[data-settings-theme]').value = 'day'
-    document.documentElement.style.setProperty('--color-dark', '10, 10, 20');
-    document.documentElement.style.setProperty('--color-light', '255, 255, 255');
-}
-*/
 
 document.querySelector('[data-list-button]').innerText = `Show more (${books.length - BOOKS_PER_PAGE})`
 document.querySelector('[data-list-button]').disabled = (matches.length - (page * BOOKS_PER_PAGE)) > 0
@@ -193,6 +126,8 @@ document.querySelector('[data-list-close]').addEventListener('click', () => {
     document.querySelector('[data-list-active]').open = false
 })
 
+// Event listener for the settings form submission to set the theme.
+// It prevents the default form submission behavior, retrieves the selected theme from the form data, and applies it using the setTheme function.
 document.querySelector('[data-settings-form]').addEventListener('submit', (event) => {
     event.preventDefault()
     const formData = new FormData(event.target)
@@ -204,6 +139,9 @@ document.querySelector('[data-settings-form]').addEventListener('submit', (event
     
 })
 
+// Event listener for the search form submission to filter and display books based on user input.
+// It prevents the default form submission behavior, retrieves the form data, and filters the books based on title, author, and genre.
+
 document.querySelector('[data-search-form]').addEventListener('submit', (event) => {
     event.preventDefault()
     const formData = new FormData(event.target)
@@ -211,17 +149,13 @@ document.querySelector('[data-search-form]').addEventListener('submit', (event) 
     const result = []
 
     for (const book of books) {
-        let genreMatch = filters.genre === 'any'
+        let genreMatch = filters.genre === 'any' || book.genres.includes(filters.genre)
 
-        for (const singleGenre of book.genres) {
-            if (genreMatch) break;
-            if (singleGenre === filters.genre) { genreMatch = true }
-        }
+        const titleMatch = filters.title.trim() === '' || book.title.toLowerCase().includes(filters.title.toLowerCase());
+        const authorMatch = filters.author === 'any' || book.author === filters.author;
 
         if (
-            (filters.title.trim() === '' || book.title.toLowerCase().includes(filters.title.toLowerCase())) && 
-            (filters.author === 'any' || book.author === filters.author) && 
-            genreMatch
+            titleMatch && authorMatch && genreMatch
         ) {
             result.push(book)
         }
@@ -271,6 +205,8 @@ document.querySelector('[data-search-form]').addEventListener('submit', (event) 
     document.querySelector('[data-search-overlay]').open = false
 })
 
+// Event listener for the "Show more" button to load more book previews.
+// It increments the page number and appends more book previews to the list until all books are displayed.
 document.querySelector('[data-list-button]').addEventListener('click', () => {
     const fragment = document.createDocumentFragment()
 
@@ -298,22 +234,15 @@ document.querySelector('[data-list-button]').addEventListener('click', () => {
     page += 1
 })
 
+// Event listener for for displaying the book details in a modal when a book preview button is clicked.
 document.querySelector('[data-list-items]').addEventListener('click', (event) => {
     const pathArray = Array.from(event.path || event.composedPath())
     let active = null
 
     for (const node of pathArray) {
-        if (active) break
-
         if (node?.dataset?.preview) {
-            let result = null
-    
-            for (const singleBook of books) {
-                if (result) break;
-                if (singleBook.id === node?.dataset?.preview) result = singleBook
-            } 
-        
-            active = result
+            active = books.find(book => book.id === node.dataset.preview);
+            break;
         }
     }
     
