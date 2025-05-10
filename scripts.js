@@ -170,6 +170,8 @@ document.querySelector('[data-list-button]').innerHTML = `
     <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
 `
 
+//--------------------------------- Event Listners -----------------------------------
+
 document.querySelector('[data-search-cancel]').addEventListener('click', () => {
     document.querySelector('[data-search-overlay]').open = false
 })
@@ -196,15 +198,10 @@ document.querySelector('[data-settings-form]').addEventListener('submit', (event
     const formData = new FormData(event.target)
     const { theme } = Object.fromEntries(formData)
 
-    if (theme === 'night') {
-        document.documentElement.style.setProperty('--color-dark', '255, 255, 255');
-        document.documentElement.style.setProperty('--color-light', '10, 10, 20');
-    } else {
-        document.documentElement.style.setProperty('--color-dark', '10, 10, 20');
-        document.documentElement.style.setProperty('--color-light', '255, 255, 255');
-    }
+    setTheme(theme);
     
     document.querySelector('[data-settings-overlay]').open = false
+    
 })
 
 document.querySelector('[data-search-form]').addEventListener('submit', (event) => {
