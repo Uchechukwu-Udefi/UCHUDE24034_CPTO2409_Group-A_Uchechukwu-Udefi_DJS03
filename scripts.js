@@ -128,6 +128,7 @@ document.querySelector('[data-list-close]').addEventListener('click', () => {
 
 // Event listener for the settings form submission to set the theme.
 // It prevents the default form submission behavior, retrieves the selected theme from the form data, and applies it using the setTheme function.
+
 document.querySelector('[data-settings-form]').addEventListener('submit', (event) => {
     event.preventDefault()
     const formData = new FormData(event.target)
@@ -164,45 +165,26 @@ document.querySelector('[data-search-form]').addEventListener('submit', (event) 
     page = 1;
     matches = result
 
+    const listMessage = document.querySelector('[data-list-message]')
     if (result.length < 1) {
-        document.querySelector('[data-list-message]').classList.add('list__message_show')
+        listMessage.classList.add('list__message_show')
     } else {
-        document.querySelector('[data-list-message]').classList.remove('list__message_show')
+        listMessage.classList.remove('list__message_show')
     }
 
-    document.querySelector('[data-list-items]').innerHTML = ''
-    const newItems = document.createDocumentFragment()
+    const listContainer = document.querySelector('[data-list-items]')
+    listContainer.innerHTML = '';
+    renderBooks(result.slice(0, BOOKS_PER_PAGE), listContainer)
 
-    for (const { author, id, image, title } of result.slice(0, BOOKS_PER_PAGE)) {
-        const element = document.createElement('button')
-        element.classList = 'preview'
-        element.setAttribute('data-preview', id)
-    
-        element.innerHTML = `
-            <img
-                class="preview__image"
-                src="${image}"
-            />
-            
-            <div class="preview__info">
-                <h3 class="preview__title">${title}</h3>
-                <div class="preview__author">${authors[author]}</div>
-            </div>
-        `
-
-        newItems.appendChild(element)
-    }
-
-    document.querySelector('[data-list-items]').appendChild(newItems)
-    document.querySelector('[data-list-button]').disabled = (matches.length - (page * BOOKS_PER_PAGE)) < 1
-
-    document.querySelector('[data-list-button]').innerHTML = `
+    listButton.disabled = result.length <= BOOKS_PER_PAGE
+    listButton.innerHTML = `
         <span>Show more</span>
-        <span class="list__remaining"> (${(matches.length - (page * BOOKS_PER_PAGE)) > 0 ? (matches.length - (page * BOOKS_PER_PAGE)) : 0})</span>
-    `
+        <span class="list__remaining"> (${Math.max(matches.length - (page * BOOKS_PER_PAGE), 0)})</span>
+    `;
 
     window.scrollTo({top: 0, behavior: 'smooth'});
     document.querySelector('[data-search-overlay]').open = false
+
 })
 
 // Event listener for the "Show more" button to load more book previews.
