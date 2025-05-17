@@ -4,7 +4,7 @@ let page = 1;
 let matches = books
 
 
-//Encapsulate the book preview element into a Web Component with self-contain HTML and CSS.
+//Encapsulate the book preview element into a Web Component with self-contain HTML and CSS styling.
 // This allows for better organization and reusability of the code.
 
 class BookPreview extends HTMLElement {
@@ -105,43 +105,28 @@ class BookPreview extends HTMLElement {
 
 customElements.define('book-preview', BookPreview);
 
-/**
- * Render the book list by appending book preview elements to the list.
- * @param {Array} booksToRender - An array of book objects.
- * @param {HTMLElement} container - The container element to append the book previews to.
- */
+//Render the book list by appending book preview elements to the list.
 
 function renderBooks(booksToRender, container) {
     const starting = document.createDocumentFragment()
 
-   /* 
     for (const book of booksToRender) {
-        const element = bookPreviewElement(book)
-        starting.appendChild(element)
+        const element = document.createElement('book-preview');
+        element.setAttribute('id', book.id);
+        element.setAttribute('image', book.image);
+        element.setAttribute('title', book.title);
+        element.setAttribute('author', book.author);
+        
+        starting.appendChild(element);
     }
-*/
-
-for (const book of booksToRender) {
-    const element = document.createElement('book-preview');
-    element.setAttribute('id', book.id);
-    element.setAttribute('image', book.image);
-    element.setAttribute('title', book.title);
-    element.setAttribute('author', book.author);
-    
-    starting.appendChild(element);
-}
 
     container.appendChild(starting)
 }
 
 renderBooks(matches.slice(0, BOOKS_PER_PAGE), document.querySelector('[data-list-items]'));
 
-/**
- * Populates a dropdown menu with options.
- * @param {Object} options - Key-value pairs for the dropdown.
- * @param {HTMLElement} container - The dropdown element.
- * @param {string} defaultText - The default option text.
- */
+// Populates the dropdown menu with options.
+
 function populateDropdown(options, container, defaultText) {
     const fragment = document.createDocumentFragment();
     const defaultOption = document.createElement('option');
