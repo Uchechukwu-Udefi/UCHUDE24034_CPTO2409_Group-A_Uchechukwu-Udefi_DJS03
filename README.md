@@ -37,3 +37,9 @@ After completing the tasks, prepare a brief presentation for your coaching group
 Submit the refactored version of the "Book Connect" application, including all HTML, CSS, and JavaScript files. Ensure that your code is well-documented and adheres to the specified Styleguides. Include a written report covering the discussion and reflection points outlined above.
 
 Make sure to submit your project to the LMS on the DJS03 Project Tab.
+
+### How I Solve the Task
+
+First I read and understand the structure, especially the HTML structure. Then I create a book preview function that extends HTML element, refactoring the block of code by getting the attributes needed and then set the inner HTML of the shadow DOM with a template that also contain the CSS styling.
+
+This exercise helps to deepen my undestanding about Web Components and how it provide a standard way to create encapsulated, reusable custom elements. These components encapsulate their HTML structure, CSS styles, and JavaScript functionality, preventing external interference and clashes with other parts of a web application.
